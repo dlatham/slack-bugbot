@@ -37,7 +37,7 @@
 								<% if @attachments[item.id] == nil %>
 									<td><%= item.name %></td>
 								<% else %>
-									<td><a href="<%= @attachments[item.id] %>"><%= item.name %></a></td>
+									<td><a href="<%= @attachments[item.id] %>" target="_parent"><%= item.name %></a></td>
 								<% end %>
 								<td><%= truncate(item.desc, :length=>650) %></td>
 							</tr>
