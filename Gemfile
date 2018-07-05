@@ -34,7 +34,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 # Reduces boot times through caching; required in config/boot.rb
-#gem 'bootsnap', '>= 1.3.0', require: false
+gem 'bootsnap', '>= 1.3.0', require: false
 
 #post stuff to slack
 gem 'slack-ruby-client'

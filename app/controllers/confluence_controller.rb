@@ -1,6 +1,5 @@
 class ConfluenceController < ApplicationController
 	require 'trello'
-	require 'dotenv'
 
 	Trello.configure do |config|
 		config.developer_public_key = ENV['TRELLO_KEY']
