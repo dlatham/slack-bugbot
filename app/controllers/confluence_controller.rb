@@ -30,9 +30,18 @@ class ConfluenceController < ApplicationController
 
 	def list
 		@card = Hash.new()
+		@attachments = Hash.new()
   		@list = Trello::Board.find(params[:id]).lists
-  		@list.each do |item|
-  			@card[item.id] = Trello::List.find(item.id).cards
+  		@list.each do |list|
+  			@card[list.id] = Trello::List.find(list.id, params = {'attachments' => true}).cards
+  			@card[list.id].each do |card|
+  				card.attachments.each do |attachment|
+  					
+  					if attachment.url.include? ENV['CONFLUENCE_URL']
+  						@attachments[card.id] = attachment.url
+  					end
+  				end
+  			end
   		end
   		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
 	end

@@ -34,7 +34,11 @@
 						<% @card[list.id].each_with_index do |item, index| %>
 							<tr>
 								<td><%= index + 1 %></td>
-								<td><%= item.name %></td>
+								<% if @attachments[item.id] == nil %>
+									<td><%= item.name %></td>
+								<% else %>
+									<td><a href="<%= @attachments[item.id] %>"><%= item.name %></a></td>
+								<% end %>
 								<td><%= truncate(item.desc, :length=>650) %></td>
 							</tr>
 						<% end %>
