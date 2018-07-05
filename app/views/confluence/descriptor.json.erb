@@ -1,0 +1,52 @@
+{
+ "name": "Roadster Product",
+ "description": "Roadmap Atlassian Connect add-on",
+ "key": "connect-add-on-roadster-roadmap",
+ "baseUrl": "<%= request.base_url %>",
+ "vendor": {
+   "name": "Roadster",
+   "url": "https://roadster.com"
+ },
+ "authentication": {
+   "type": "jwt"
+ },
+ "lifecycle": {
+  "installed": "/confluence/installed",
+  "uninstalled": "/confluence/uninstalled"
+  },
+ "modules": {
+   "dynamicContentMacros": [
+     {
+       "url": "/confluence/list/{boardid}",
+       "description": {
+         "value": "Display Roadster's product roadmap in Confluence"
+       },
+       "icon": {
+         "width": 80,
+         "height": 80,
+         "url": "/assets/logo_300x300.png"
+       },
+       "parameters": [
+         {
+           "identifier": "boardid",
+           "name": {
+             "value": "Board ID"
+           },
+           "description": {
+             "value": "The board ID from trello"
+           },
+           "type": "string",
+           "required": true
+         }
+       ],
+       "output-type": "block",
+       "name": {
+         "value": "Roadster Trello"
+       },
+       "key": "roadster-trello",
+       "featured": true
+     }
+   ]
+ },
+ "apiVersion": 1
+}

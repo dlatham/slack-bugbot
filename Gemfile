@@ -36,7 +36,16 @@ gem 'jbuilder', '~> 2.5'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
+#post stuff to slack
 gem 'slack-ruby-client'
+
+#handle authentication for the atlassian confluence add on functionality
+gem 'atlassian-jwt-authentication', 
+                git: 'https://github.com/MeisterLabs/atlassian-jwt-authentication.git', 
+                require: 'atlassian_jwt_authentication'
+
+#tools for trello API calls
+gem 'ruby-trello'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
