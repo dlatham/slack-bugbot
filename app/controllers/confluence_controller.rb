@@ -1,5 +1,7 @@
 class ConfluenceController < ApplicationController
 	require 'trello'
+	require 'net/http'
+	require 'json'
 
 	Trello.configure do |config|
 		config.developer_public_key = ENV['TRELLO_KEY']
@@ -45,5 +47,29 @@ class ConfluenceController < ApplicationController
   		end
   		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
 	end
+
+	def backlog
+		#custom fields not supported with the trello gem so I needed to parse the JSON myself
+		http = Net::HTTP.new("api.trello.com", 443)
+		http.use_ssl = true
+		req = Net::HTTP::Get.new("/1/lists/#{params[:id]}/cards?key=#{ENV['TRELLO_KEY']}&token=#{ENV['TRELLO_TOKEN']}&customFieldItems=true&fields=name,desc,dateLastActivity,url")
+		res = http.request(req)
+		@list = JSON.parse(res.body)
+		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
+	end
+
+	def vote
+		count = params[:count].to_i + 1
+		http = Net::HTTP.new("api.trello.com", 443)
+		http.use_ssl = true
+		req = Net::HTTP::Put.new("/1/card/#{params[:id]}/customField/#{params[:customfieldid]}/item", initheader = { 'Content-Type' => 'application/json'})
+		req.body = {"id" => params[:id], "value" => {"number" => count.to_s}, "key" => ENV['TRELLO_KEY'], "token" => ENV['TRELLO_TOKEN']}.to_json
+		#puts req.body
+		res = http.request(req)
+		@result = JSON.parse(res.body)
+		puts @result
+		redirect_back fallback_location: { action: "backlog", id: params[:listID] }
+	end
+
 
 end

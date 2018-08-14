@@ -45,8 +45,49 @@
        },
        "key": "roadster-trello",
        "featured": true
+     },
+     {
+       "url": "/confluence/backlog/{listid}?customfieldid={customfieldid}",
+       "description": {
+         "value": "Display a Roadster project list for voting"
+       },
+       "icon": {
+         "width": 80,
+         "height": 80,
+         "url": "/assets/logo_300x300.png"
+       },
+       "parameters": [
+         {
+           "identifier": "listid",
+           "name": {
+             "value": "List ID"
+           },
+           "description": {
+             "value": "The list ID from trello"
+           },
+           "type": "string",
+           "required": true
+         },
+         {
+           "identifier": "customfieldid",
+           "name": {
+             "value": "Custom Field ID"
+           },
+           "description": {
+             "value": "The ID of the custom field where the vote is stored"
+           },
+           "type": "string",
+           "required": true
+         }
+       ],
+       "output-type": "block",
+       "name": {
+         "value": "Roadster Trello Ballot"
+       },
+       "key": "roadster-trello-ballot",
+       "featured": true
      }
    ]
  },
- "apiVersion": 1
+ "apiVersion": 2
 }

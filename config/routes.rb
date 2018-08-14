@@ -11,4 +11,6 @@ Rails.application.routes.draw do
   post 'confluence/installed', to: 'confluence#installed'
   post 'confluence/uninstalled', to: 'confluence#uninstalled'
   get 'confluence/list/:id', to: 'confluence#list'
+  get 'confluence/backlog/:id', to: 'confluence#backlog'
+  get 'confluence/backlog/vote/:id', to: 'confluence#vote'
 end
