@@ -71,5 +71,11 @@ class ConfluenceController < ApplicationController
 		redirect_back fallback_location: { action: "backlog", id: params[:listID] }
 	end
 
+	def new
+		#handle a GET request for the new backlog item input form
+		#response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
+	end
+
+
 
 end

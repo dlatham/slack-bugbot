@@ -140,6 +140,7 @@ GEM
     nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
     oauth (0.5.4)
+    openssl (2.1.0)
     pg (1.0.0)
     public_suffix (3.0.2)
     puma (3.11.4)
@@ -256,6 +257,7 @@ DEPENDENCIES
   dotenv-rails
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
+  openssl
   pg
   puma (~> 3.11)
   rails (~> 5.2.0)

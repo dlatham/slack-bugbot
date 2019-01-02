@@ -13,4 +13,5 @@ Rails.application.routes.draw do
   get 'confluence/list/:id', to: 'confluence#list'
   get 'confluence/backlog/:id', to: 'confluence#backlog'
   get 'confluence/backlog/vote/:id', to: 'confluence#vote'
+  get 'confluence/new', to: 'confluence#new'
 end
