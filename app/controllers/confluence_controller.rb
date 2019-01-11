@@ -71,5 +71,67 @@ class ConfluenceController < ApplicationController
 		redirect_back fallback_location: { action: "backlog", id: params[:listID] }
 	end
 
+	def new
+		#handle a GET request for the new backlog item input form
+		#response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
+	end
+
+	def poll
+		#Handle a request for a poll name that may or may not exist
+		@poll = Poll.find_by(pollname: params[:pollname])
+		if !@poll then
+			@poll = Poll.new(pollname: params[:pollname], active: params[:active], open_submit: params[:open_submit], expires: params[:expires])
+			if @poll.save then
+				flash[:success] =  "A new poll has been created."
+			else
+				flash[:error] = "There was an error creating your poll. Please try again."
+			end
+		else
+			if @poll.questions != nil
+				@questions = []
+				@poll.questions.each.with_index do |question, i|
+					@questions.push({text: question, votes: Pollvote.where(poll_id: @poll.id, question_id: i).count})
+				end
+				@total_votes = Pollvote.where(poll_id: @poll.id).count
+			end
+		end
+		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
+
+
+	end
+
+	def create_poll_question
+		@poll = Poll.find_by(pollname: params[:pollname])
+		if @poll.questions == nil
+			@poll.questions = [params[:question]]
+		else
+			@poll.questions.push(params[:question])
+		end
+		if @poll.save
+			flash[:success] = "You've added a suggested topic to this poll."
+		else
+			flash[:error] = "There was an error saving your topic. Please try again."
+		end
+		redirect_to controller: "confluence", action: "poll", pollname: @poll.pollname
+	end
+
+	def create_poll_vote
+		@pollvote = Pollvote.new(poll_id: params[:poll_id], username: params[:username], question_id: params[:question_id])
+		if @pollvote.save
+			flash[:success] = "Your vote is counted!"
+		else
+			flash[:error] = "There was an error saving your vote. Please try again."
+		end
+		redirect_to controller: "confluence", action: "poll", pollname: params[:pollname]
+	end
+
+	private
+
+	def poll_vote_params
+    	params.require(:poll_id).permit(:username, :question_id)
+    	# params.require(:heartbeat).permit(:probe_id, :voltage, :temp, :humid)
+  	end
+
+
 
 end
