@@ -1,0 +1,87 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="//aui-cdn.atlassian.com/aui-adg/6.0.9/js/aui.min.js"></script>
+<link rel="stylesheet" href="//aui-cdn.atlassian.com/aui-adg/6.0.9/css/aui.min.css" media="all">
+<link rel="stylesheet" href="//aui-cdn.atlassian.com/aui-adg/6.0.9/css/aui-experimental.min.css" media="all">
+<script src="//aui-cdn.atlassian.com/aui-adg/6.0.9/js/aui-experimental.min.js"></script>
+<script src="<%= ENV['CONFLUENCE_URL'] %>/wiki/atlassian-connect/all.js"></script>
+
+<section id="content" class="ac-content">
+<% flash.each do |key, value| %>
+<div class="aui-message aui-message-<%= key %> fadeout">
+    <p class="title">
+        <strong><%= key %></strong>
+    </p>
+    <p><%= value %></p>
+</div>
+<% end %>
+
+<h1><%= @poll.pollname %></h1>
+
+<% if @poll.active and @poll.expires == nil  %>
+This poll is currently accepting votes.
+<% elsif @poll.active and @poll.expires <= Date.today then %>
+This poll will be excepting voting through <%= @poll.expires %>.
+<% end %>
+
+<% if @poll.questions != nil %>
+<table class="aui">
+    <thead>
+        <tr>
+            <th id="basic-topic">Suggested Topic</th>
+            <th id="basic-number">Total Votes</th>
+            <th id="basic-vote">Vote</th>
+        </tr>
+    </thead>
+	<tbody>
+	<% @questions.each.with_index do |question, i| %>
+		<tr>
+            <td headers="basic-topic"><%= question[:text] %></td>
+            <td headers="basic-number"><%= question[:votes] %></td>
+            <td headers="basic-vote"><%= form_tag(controller: "confluence", action: "create_poll_vote", method: "post") do %><%= hidden_field_tag("question_id", i) %><%= hidden_field_tag("poll_id", @poll.id) %><%= hidden_field_tag("username") %><button type="submit" class="aui-button aui-button-primary" onclick="makeButtonBusy(this)">Vote</button><% end %></td>
+    	</tr>
+    <% end %>
+	</tbody>
+</table>
+<% else %>
+	<div class="aui-message aui-message-notification">
+    <p class="title">
+        <strong>No poll topics</strong>
+    </p>
+    <p>You'll need to create some potential topics below.</p>
+</div>
+<% end %>
+
+<br />
+
+
+
+<div class="aui-group">
+	<%= form_tag({controller: "confluence", action: "create_poll_question", method: "post"}, {:class => 'aui top-label'}) do %>
+		<div class="field-group">
+        	<label for="text-input">Suggested Topic: <span class="aui-icon icon-required">required</span></label>
+        	<input class="text long-field" type="text" id="question" name="question" title="Question">
+        	<div class="description">This potential question will be added to the poll above.</div>
+        	<button type="submit" class="aui-button aui-button-primary" onclick="makeButtonBusy(this)">Add</button>
+    	</div>
+	<% end %>
+</div>
+
+</section>
+
+<script language="javascript">
+function makeButtonBusy(button){
+	var that = button;
+    if (!that.isBusy()) {
+        that.busy();
+
+        setTimeout(function() {
+            that.idle();
+        }, 2000);
+    }
+}
+
+AJS.$("#dialog-show-button").click(function() {
+    AJS.dialog2("#static-dialog").show();
+});
+
+</script>

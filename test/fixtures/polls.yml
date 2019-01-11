@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  pollname: MyString
+  active: false
+  open_submit: false
+  expires: 2019-01-02 16:23:09
+
+two:
+  pollname: MyString
+  active: false
+  open_submit: false
+  expires: 2019-01-02 16:23:09
