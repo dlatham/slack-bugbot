@@ -71,11 +71,6 @@ class ConfluenceController < ApplicationController
 		redirect_back fallback_location: { action: "backlog", id: params[:listID] }
 	end
 
-	def new
-		#handle a GET request for the new backlog item input form
-		#response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
-	end
-
 	def poll
 		#Handle a request for a poll name that may or may not exist
 		@poll = Poll.find_by(pollname: params[:pollname])
@@ -96,8 +91,6 @@ class ConfluenceController < ApplicationController
 			end
 		end
 		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
-
-
 	end
 
 	def create_poll_question
@@ -124,6 +117,38 @@ class ConfluenceController < ApplicationController
 		end
 		redirect_to controller: "confluence", action: "poll", pollname: params[:pollname]
 	end
+
+	def new
+		#handle a GET request for the new backlog item input form
+		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
+	end
+
+
+  	def save_backlog_item
+  		# Add a new item to the backlog
+  		#params.permit(:name, :desc, :email, :dealerships_request, :idList)
+  		flash.discard
+  		@desc = params[:desc] + "\r\n\r\nRequested by: " + params[:email] + " for the following dealerships: " + params[:dealerships_request]
+  		# need to add the idMembers parameter as well
+  		@backlog = {name: params[:name], desc: @desc, pos: "bottom", idList: params[:idList]}
+  		http = Net::HTTP.new("api.trello.com", 443)
+		http.use_ssl = true
+		q = "/1/cards?key=#{ENV['TRELLO_KEY']}&token=#{ENV['TRELLO_TOKEN']}&" + @backlog.to_query
+		puts q
+		req = Net::HTTP::Post.new(q)
+		req.set_form_data(@backlog)
+		res = http.request(req)
+		puts res.code
+		puts res.message
+		if res.code == '200'
+			flash[:success] = "Your request has been added to the backlog and someone will be in touch soon!"
+		else
+			flash[:error] = "Oh no. Something went wrong. Please try your request again or contact Dave / Jay."
+		end
+
+		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
+		render 'success'
+  	end
 
 	private
 

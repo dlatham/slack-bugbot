@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get 'confluence/list/:id', to: 'confluence#list'
   get 'confluence/backlog/:id', to: 'confluence#backlog'
   get 'confluence/backlog/vote/:id', to: 'confluence#vote'
+  post 'confluence/backlog/create', to: 'confluence#save_backlog_item'
   get 'confluence/new', to: 'confluence#new'
   get 'confluence/poll/:pollname', to: 'confluence#poll'
   post 'confluence/poll/:pollname/create_question', to: 'confluence#create_poll_question'

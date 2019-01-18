@@ -6,30 +6,40 @@
 <section id="content" class="ac-content">
 <form class="aui" action="/confluence/backlog/create" method="post">
 	<div class="field-group">
-		<label for="feature-name">Feature Request Name<span class="aui-icon icon-required"> required</span></label>
-    	<input class="text" type="text" id="feature-name" name="feature-name" title="feature-name" placeholder="Feature name...">
-    	<div class="description">A descriptive name of the product feature</div>
+		<label for="name">Feature Request Name<span class="aui-icon icon-required"> required</span></label>
+    	<input class="text long-field" type="text" id="name" name="name" title="name" placeholder="Widget that allows dealer to order sandwiches">
+    	<div class="description">A very descriptive name of the product feature</div>
     </div>
     <div class="field-group">
-		<label for="textarea-id">Description<span class="aui-icon icon-required"> required</span></label>
-    	<textarea class="textarea" name="comment" id="textarea-id" placeholder="Your comment here..."></textarea>
+		<label for="desc">Description<span class="aui-icon icon-required"> required</span></label>
+    	<textarea class="textarea long-field" name="desc" id="desc" placeholder="Success for this feature would mean that the dealer engagement in admin would increase during lunch time..."></textarea>
     	<div class="description">Provide some specifics to what the feature would accomplish</div>
     </div>
     <div class="field-group">
-		<label for="dealerships-request">Requested by Dealership(s)</label>
-    	<input class="text" type="text" id="deaerships-request" name="dealerships-request" title="dealerships-request" placeholder="John's Subaru, Honda of Southern Kentucky">
+		<label for="dealerships_request">Requested by Dealership(s)</label>
+    	<input class="text long-field" type="text" id="deaerships_request" name="dealerships_request" title="dealerships_request" placeholder="John's Subaru, Honda of Southern Kentucky">
     	<div class="description">Names of specific dealerships that have requested this feature, if any. If multiple, add all the names separated by commas.</div>
     </div>
     <fieldset class="group">
     	<legend><span>Is this request impacting a sales or retention opportunity?</span></legend>
     		<div class="checkbox">
-        		<input class="checkbox" type="checkbox" name="checkBoxOne" id="checkBoxOne">
-        		<label for="checkBoxOne">Sales opportunity requirement</label>
+        		<input class="checkbox" type="checkbox" name="sales" id="sales">
+        		<label for="sales">Sales opportunity requirement</label>
     		</div>                                
     		<div class="checkbox">
-        		<input class="checkbox" type="checkbox" name="checkBoxTwo" id="checkBoxTwo">
-        		<label for="checkBoxTwo">Retention risk requirement</label>
+        		<input class="checkbox" type="checkbox" name="retention" id="retention">
+        		<label for="retention">Retention risk requirement</label>
     		</div>                                                                
 	</fieldset>
+    <div class="field-group">
+        <label for="feature-name">Your email address<span class="aui-icon icon-required"> required</span></label>
+        <input class="text long-field" type="text" id="email" name="email" title="email" placeholder="judy.roadster@roadster.com">
+        <div class="description">You'll receive updates as this request is updated.</div>
+    </div>
+    <div class="field-group">
+        <button class="aui-button aui-button-primary" id="button-spin-1">Add this to the list!</button>
+    </div>
+    <input type="hidden" name="idList" id="idList" value="<%= params[:idList] %>">
+
 </form>
 </section>
