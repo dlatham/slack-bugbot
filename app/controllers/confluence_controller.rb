@@ -2,6 +2,7 @@ class ConfluenceController < ApplicationController
 	require 'trello'
 	require 'net/http'
 	require 'json'
+	require 'uri'
 
 	Trello.configure do |config|
 		config.developer_public_key = ENV['TRELLO_KEY']
@@ -9,15 +10,11 @@ class ConfluenceController < ApplicationController
 	end
 
 	include AtlassianJwtAuthentication
+	#AtlassianJwtAuthentication.context_path = '/atlassian/confluence'
 	
 	skip_before_action :verify_authenticity_token
-	before_action only: [:installed] do
-		on_add_on_installed
-	end
+	before_action :on_add_on_installed, only: [:installed]
 	before_action :on_add_on_uninstalled, only: [:uninstalled]
-	before_action only: [:get_task] do |controller|
-		controller.send(:verify_jwt, 'connect-add-on-roadster-roadmap')
-	end
 
 	def descriptor
 	end
@@ -145,10 +142,27 @@ class ConfluenceController < ApplicationController
 		else
 			flash[:error] = "Oh no. Something went wrong. Please try your request again or contact Dave / Jay."
 		end
-
+		response.headers.delete "X-Frame-Options"
 		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
-		render 'success'
+		render 'confluence/new'
   	end
+
+  	def insecure_referral
+  		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
+  	end
+
+  	def render_insecure_referral
+  		mem = (params[:fname]!="" ? "fname=" + params[:fname] + "&" : "") + (params[:lname]!="" ? "lname=" + params[:lname] + "&" : "") + (params[:phone]!="" ? "phone=" + params[:phone] + "&" : "") + (params[:custid]!="" ? "custid=" + params[:custid] + "&" : "") + "email=" + params[:email]
+  		@url = params[:base_url] + "/express/" + (params[:new_used]=='used' ? "used/" : "") + params[:vin] + "?mem=" + URI.escape(mem, "=&@")
+  		# build the URL for CRM email templates
+  		case params[:crm]
+  		when "elead"
+  			@crm_url = params[:base_url] + "/express/" + (params[:new_used]=='used' ? "used/" : "") + "<{SoughtVin}>?mem=fname%3D<{CustFirstName}>%26lname%3D<{CustLastName}>%26phone%3D<{CustHomePhone}>%26email%3D<{CustEMailAddress}>"
+  		end
+  		response.headers.delete "X-Frame-Options"
+  		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
+  	end
+
 
 	private
 
