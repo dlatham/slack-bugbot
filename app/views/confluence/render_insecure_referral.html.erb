@@ -1,0 +1,53 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="//aui-cdn.atlassian.com/aui-adg/6.0.9/js/aui.min.js"></script>
+<link rel="stylesheet" href="//aui-cdn.atlassian.com/aui-adg/6.0.9/css/aui.min.css" media="all">
+<script src="<%= ENV['CONFLUENCE_URL'] %>/wiki/atlassian-connect/all.js"></script>
+
+<section id="content" class="ac-content">
+	<table class="aui">
+		<thead>
+			<tr>
+				<th id="fname">First Name</th>
+				<th id="lname">Last Name</th>
+				<th id="email">Email</th>
+				<th id="phone">Phone</th>
+				<th id="custid">Customer ID</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td headers="fname"><%= params[:fname] %></td>
+				<td headers="lname"><%= params[:lname] %></td>
+				<td headers="email"><%= params[:email] %></td>
+				<td headers="phone"><%= params[:phone] %></td>
+				<td headers="custid"><%= params[:custid] %></td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="aui">
+		<thead>
+			<tr>
+				<th id="url">Lead Creation URL</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td headers="url"><a href="<%= @url %>"><%= @url %></a></td>
+			</tr>
+		</tbody>
+	</table>
+	<% if @crm_url %>
+		<table class="aui">
+			<thead>
+				<tr>
+					<th id="crm">eLead Email Template String</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td headers="crm"><%= @crm_url %></td>
+				</tr>
+			</tbody>
+		</table>
+	<% end %>
+</section>

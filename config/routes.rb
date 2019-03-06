@@ -18,4 +18,6 @@ Rails.application.routes.draw do
   get 'confluence/poll/:pollname', to: 'confluence#poll'
   post 'confluence/poll/:pollname/create_question', to: 'confluence#create_poll_question'
   post 'confluence/poll/:pollname/vote', to: 'confluence#create_poll_vote'
+  get 'confluence/insecure_referral', to: 'confluence#insecure_referral'
+  post 'confluence/render_insecure_referral', to: 'confluence#render_insecure_referral'
 end

@@ -4,6 +4,14 @@
 <script src="<%= ENV['CONFLUENCE_URL'] %>/wiki/atlassian-connect/all.js"></script>
 
 <section id="content" class="ac-content">
+    <% flash.each do |key, value| %>
+        <div class="aui-message aui-message-<%= key %> fadeout">
+            <p class="title">
+                <strong><%= key %></strong>
+            </p>
+            <p><%= value %></p>
+        </div>
+    <% end %>
 <form class="aui" action="/confluence/backlog/create" method="post">
 	<div class="field-group">
 		<label for="name">Feature Request Name<span class="aui-icon icon-required"> required</span></label>
