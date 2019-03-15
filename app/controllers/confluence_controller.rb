@@ -158,6 +158,8 @@ class ConfluenceController < ApplicationController
   		case params[:crm]
   		when "elead"
   			@crm_url = params[:base_url] + "/express/" + (params[:new_used]=='used' ? "used/" : "") + "<{SoughtVin}>?mem=fname%3D<{CustFirstName}>%26lname%3D<{CustLastName}>%26phone%3D<{CustHomePhone}>%26email%3D<{CustEMailAddress}>"
+  		when "vinsolutions"
+  			@crm_url = params[:base_url] + "/express/" + (params[:new_used]=='used' ? "used/" : "") + "[VEHICLE VIN]?mem=fname%3D[CUSTOMER FIRST NAME]%26lname%3D[CUSTOMER LAST NAME]%26phone%3D[CUSTOMER DAY PHONE]%26email%3D[CUSTOMER EMAIL]"
   		end
   		response.headers.delete "X-Frame-Options"
   		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
