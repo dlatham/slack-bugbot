@@ -20,7 +20,7 @@ class ChatsController < ApplicationController
 	private
 
 	def validate_request
-		unauthorized if params[:token] != "ef0f64f2-3811-49fe-8a30-00b92a7b1c8e"
+		unauthorized if params[:token] != ENV['CHAT_TOKEN']
 	end
 
 	def chat_params
