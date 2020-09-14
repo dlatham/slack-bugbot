@@ -23,5 +23,8 @@ Rails.application.routes.draw do
 
   #Referral routes
   get '/referrals', to: 'referrals#index'
+
+  #Chat routes
+  post '/messages', to: 'chats#create'
   
 end
