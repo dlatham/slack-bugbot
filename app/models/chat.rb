@@ -3,16 +3,16 @@ class Chat < ApplicationRecord
 	def self.export(records=30)
 		data = Chat.first(records)
 
-		current_out = $stdout
-		$stdout = File.new('chats.csv', 'w')
-		$stdout.sync = true
+		#current_out = $stdout
+		#$stdout = File.new('chats.csv', 'w')
+		#$stdout.sync = true
 		
 		puts "id,dpid,session,provider,message\n"
 		Chat.first(records).each do |c|
 			puts "#{c.id},#{c.dpid},#{c.session},#{c.provider},\"#{CGI.unescapeHTML(c.message)}\"\n" unless c.message.nil?
 		end
 
-		$stdout = current_out
+		#$stdout = current_out
 
 	end
 
