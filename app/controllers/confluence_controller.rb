@@ -3,6 +3,7 @@ class ConfluenceController < ApplicationController
 	require 'net/http'
 	require 'json'
 	require 'uri'
+	require 'passphrase'
 
 	Trello.configure do |config|
 		config.developer_public_key = ENV['TRELLO_KEY']
@@ -10,11 +11,23 @@ class ConfluenceController < ApplicationController
 	end
 
 	include AtlassianJwtAuthentication
-	#AtlassianJwtAuthentication.context_path = '/atlassian/confluence'
+	AtlassianJwtAuthentication.context_path = '/confluence'
 	
 	skip_before_action :verify_authenticity_token
 	before_action :on_add_on_installed, only: [:installed]
 	before_action :on_add_on_uninstalled, only: [:uninstalled]
+
+	# will respond with head(:unauthorized) if verification fails
+	before_action only: [:encrypted_file] do |controller|
+		AtlassianJwtAuthentication.context_path = '/confluence'
+		controller.send(:verify_jwt, 'connect-add-on-roadster-roadmap')
+	end
+
+	before_action only: [:encrypted_file_upload] do |controller|
+		if !jwt_check_without_qsh
+			render status: 401 and return
+		end
+	end
 
 	def descriptor
 	end
@@ -165,6 +178,33 @@ class ConfluenceController < ApplicationController
   		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
   	end
 
+  	def encrypted_file
+  		@jwt = params[:jwt]
+  		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
+  	end
+
+  	def encrypted_file_upload
+  		if !params[:upload][:file] || params[:upload][:file] == ""
+  			flash[:error] = "No file selected"
+  			redirect_to action: 'encrypted_file' and return
+  		end
+
+  		file = params[:upload][:file]
+
+  		if file.content_type != "application/octet-stream"
+  			flash[:error] = "File should be a GPG-encrypted file"
+  			redirect_to action: 'encrypted_file' and return
+  		end
+
+  		data = RoadsterGPG.new(encrypted_file: file)
+
+  		response.headers["X-FRAME-OPTIONS"] = "ALLOW-FROM #{ENV['CONFLUENCE_URL']}"
+  		send_data data.decrypt, filename: "#{file.original_filename.split(".").first}.txt", type: "text/plain", disposition: 'attachment'
+
+  		#render inline: data.decrypt
+
+  	end
+
 
 	private
 
@@ -173,6 +213,16 @@ class ConfluenceController < ApplicationController
     	# params.require(:heartbeat).permit(:probe_id, :voltage, :temp, :humid)
   	end
 
+    def jwt_check_without_qsh
+    	decoded = JWT.decode(params[:jwt], nil, false, { verify_expiration: AtlassianJwtAuthentication.verify_jwt_expiration, algorithm: 'HS256' })
+    	data = decoded[0]
+    	jwt_auth = JwtToken.where(client_key: data['iss'], addon_key: 'connect-add-on-roadster-roadmap').first
+    	if !jwt_auth
+    		return false
+    	else
+    		return true
+    	end
+    end
 
 
 end

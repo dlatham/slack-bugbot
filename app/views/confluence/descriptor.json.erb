@@ -2,7 +2,7 @@
  "name": "Roadster Product",
  "description": "Roadmap Atlassian Connect add-on",
  "key": "connect-add-on-roadster-roadmap",
- "baseUrl": "<%= request.base_url %>",
+ "baseUrl": "<%= request.base_url + '/confluence' %>",
  "vendor": {
    "name": "Roadster",
    "url": "https://roadster.com"
@@ -11,13 +11,13 @@
    "type": "jwt"
  },
  "lifecycle": {
-  "installed": "/confluence/installed",
-  "uninstalled": "/confluence/uninstalled"
+  "installed": "/installed",
+  "uninstalled": "/uninstalled"
   },
  "modules": {
    "dynamicContentMacros": [
      {
-       "url": "/confluence/list/{boardid}",
+       "url": "/list/{boardid}",
        "description": {
          "value": "Display Roadster's product roadmap in Confluence"
        },
@@ -47,7 +47,7 @@
        "featured": true
      },
      {
-       "url": "/confluence/backlog/{listid}?customfieldid={customfieldid}",
+       "url": "/backlog/{listid}?customfieldid={customfieldid}",
        "description": {
          "value": "Display a Roadster project list for voting"
        },
@@ -87,7 +87,7 @@
        "key": "roadster-trello-ballot",
        "featured": true
      },{
-       "url": "/confluence/new/?idList={idList}",
+       "url": "/new/?idList={idList}",
        "description": {
          "value": "Add a new item form for posting to our Trello."
        },
@@ -116,7 +116,7 @@
        "key": "roadster-trello-new",
        "featured": true
      },{
-       "url": "/confluence/poll/{pollname}?active={active}&open_submit={open_submit}&expires={expires}",
+       "url": "/poll/{pollname}?active={active}&open_submit={open_submit}&expires={expires}",
        "description": {
          "value": "Create a Roadster poll within a confluence page"
        },
@@ -164,7 +164,7 @@
            "description": {
              "value": "YYYY-MM-DD format"
            },
-           "type": "date",
+           "type": "string",
            "required": false
          }
        ],
@@ -175,7 +175,7 @@
        "key": "roadster-poll",
        "featured": true
      },{
-       "url": "/confluence/insecure_referral",
+       "url": "/insecure_referral",
        "description": {
          "value": "A helper to generate insecure referral URLs"
        },
@@ -190,6 +190,23 @@
        },
        "key": "roadster-insecure-referral",
        "featured": true
+     },
+     {
+       "url": "/encrypted_file",
+       "description": {
+         "value": "A helper to decrypt GPG files"
+       },
+       "icon": {
+         "width": 80,
+         "height": 80,
+         "url": "<%= image_path('logo_300x300.png') %>"
+       },
+       "output-type": "block",
+       "name": {
+         "value": "GPG Decrypt"
+       },
+       "key": "roadster-gpg-decrypt",
+       "featured": false
      }
    ]
  },

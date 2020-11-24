@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   post 'confluence/poll/:pollname/vote', to: 'confluence#create_poll_vote'
   get 'confluence/insecure_referral', to: 'confluence#insecure_referral'
   post 'confluence/render_insecure_referral', to: 'confluence#render_insecure_referral'
+  get '/confluence/encrypted_file', to: 'confluence#encrypted_file'
+  post '/confluence/encrypted_file', to: 'confluence#encrypted_file_upload'
 
   #Referral routes
   get '/referrals', to: 'referrals#index'
